@@ -64,20 +64,34 @@ function getCourses() {
     });
 }
 
-function getStudentById(id) {
+function getStudentByNum(id) {
     return new Promise((resolve, reject) => {
-        const student = dataCollection.students.find(student => student.studentId === id);
-        if (!student) {
+        var course = null;
+        for(let i = 0; i < dataCollection.students.length ; i++ ){
+            if (dataCollection.students[i].studentNum == id) {
+                course = dataCollection.students[i];
+                break;
+            }
+            
+        }
+        if (!course) {
             reject("no results returned");
         } else {
-            resolve(student);
+            resolve(course);
         }
     });
 }
 
 function getCourseById(id) {
     return new Promise((resolve, reject) => {
-        const course = dataCollection.courses.find(course => course.courseId === id);
+        var course = null;
+        for(let i = 0; i < dataCollection.courses.length ; i++ ){
+            if (dataCollection.courses[i].courseId == id) {
+                course = dataCollection.courses[i];
+                break;
+            }
+            
+        }
         if (!course) {
             reject("no results returned");
         } else {
@@ -97,16 +111,16 @@ function getStudentsByCourse(course) {
     });
 }
 
-function getStudentByNum(num) {
-    return new Promise((resolve, reject) => {
-        const student = dataCollection.students.find(student => student.studentNum === num);
-        if (!student) {
-            reject("no results returned");
-        } else {
-            resolve(student);
-        }
-    });
-}
+// function getStudentByNum(num) {
+//     return new Promise((resolve, reject) => {
+//         const student = dataCollection.students.find(student => student.studentNum === num);
+//         if (!student) {
+//             reject("no results returned");
+//         } else {
+//             resolve(student);
+//         }
+//     });
+// }
 
 function addStudent(studentInfo){
     return new Promise ((resolve, reject) => {
@@ -122,4 +136,17 @@ function addStudent(studentInfo){
     });
 }
 
-module.exports = { initialize, getAllStudents, getTAs, getCourses, getStudentById, getCourseById, getStudentsByCourse, getStudentByNum, addStudent };
+function updateStudent(student) {
+    return new Promise((resolve, reject) => {
+        if (!dataCollection) {
+            reject("data not initialized");
+            return;
+        }
+
+        // Add the new student to the students array
+        dataCollection.students[student.studentNum] = student;
+        resolve();
+        // Save the updated students array back to the students.json file
+    });
+}
+module.exports = {updateStudent,  initialize, getAllStudents, getTAs, getCourses, getCourseById, getStudentsByCourse, getStudentByNum, addStudent };
